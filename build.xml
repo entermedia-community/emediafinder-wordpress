@@ -1,0 +1,12 @@
+<project default="all" name="emediafinder-wordpress-plugin" basedir="." >
+    <target name="all" depends="clean,build" />
+    <property name="project-name" value="emediafinder-wordpress" />
+    <property name="build" location="${basedir}"/>
+    <target name="clean" >
+	<delete file="{project-name}.zip" />
+    </target>
+    <target name="build" depends="clean" >
+	    <zip destfile="${project-name}.zip" basedir="./" excludes="build.xml,${project-name}.zip" />
+    </target>
+</project>
+
