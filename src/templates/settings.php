@@ -159,11 +159,19 @@
         });
     }
 
-    function HttpGet(url) {
+    // function HttpGet(url) {
+    //     var xmlHttp = new XMLHttpRequest();
+    //     xmlHttp.open("GET", url, false);
+    //     xmlHttp.send(null);
+    //     return xmlHttp; //.responseText;
+    // }
+
+    function HttpPost(url, data) {
         var xmlHttp = new XMLHttpRequest();
-        xmlHttp.open("GET", url, false);
-        xmlHttp.send(null);
-        return xmlHttp; //.responseText;
+        xmlHttp.open("POST", url, false);
+        xmlHttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xmlHttp.send(JSON.stringify(data));
+        return xmlHttp;
     }
 
     function alertEmail(message, divid) {
@@ -184,7 +192,7 @@
         const urlPath = '/entermediadb/mediadb/services/authentication/emailwordpress.json'
         const encodedEmail = encodeURIComponent(email.value);
         const url = encodeURI(`${emHost}${urlPath}?to=`); // dont re-encode email here
-        const resp = HttpGet(url + encodedEmail);
+        const resp = HttpPost(url + encodedEmail, {});
         if (resp.status === 200) {
             alertEmail('Email sent, please check your email don\'t forget to check spam folder', 'alertmail');
         } else {
@@ -212,7 +220,7 @@
         const emKey = document.getElementById('emdb_entermediakey');
         const encodedKey = encodeURIComponent(emKey.value);
         const url = encodeURI(`${emHost}${urlPath}?entermedia.key=`); // dont re-encode email here
-        const resp = HttpGet(url + encodedKey);
+        const resp = HttpPost(url + encodedKey, {});
         if (resp.status === 200) {
             workspaces = JSON.parse(resp.response);
             const workspaceSelect = document.getElementById('emcatalogs');

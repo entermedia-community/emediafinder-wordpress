@@ -6,7 +6,7 @@
  * Description: eMediafinder Gallery selector
  * Author: EnterMediaDB team
  * Author URI: https://emediafinder.com
- * Version: 1.0.0
+ * Version: @@Version@@
  *
  * @package CGB
  */
