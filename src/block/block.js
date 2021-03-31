@@ -1,8 +1,7 @@
 /**
  * BLOCK: emedia-finder
  *
- * Registering a basic block with Gutenberg.
- * Simple block, renders and saves the same content without any interactivity.
+ * Block will open a gallery rendered on your server
  */
 
 //  Import CSS.
@@ -31,14 +30,13 @@ const { RichText, InspectorControls } = wp.blockEditor;
 
 
 registerBlockType('cgb/block-emedia-finder', {
-	// Block name. Block names must be string that contains a namespace prefix. Example: my-plugin/my-custom-block.
-	title: __('eMediaFinder gallery'), // Block title.
-	icon: 'format-gallery', // Block icon from Dashicons → https://developer.wordpress.org/resource/dashicons/.
-	category: 'common', // Block category — Group blocks together based on common traits E.g. common, formatting, layout widgets, embed.
+	title: __('eMediaFinder gallery'),
+	icon: 'format-gallery',
+	category: 'common',
 	keywords: [
-		__('emedia-finder — CGB Block'),
-		__('CGB Example'),
-		__('create-guten-block'),
+		__('emedia-finder'),
+		__('entermedia'),
+		__('emediafinder'),
 	],
 	attributes: {
 		url: { type: 'string' },
@@ -54,35 +52,36 @@ registerBlockType('cgb/block-emedia-finder', {
 	},
 
 	/**
-	 * The edit function describes the structure of your block in the context of the editor.
-	 * This represents what the editor will render when the block is used.
+	 * Gallery that shows assets on your server
 	 *
-	 * The "edit" property must be a valid function.
-	 *
-	 * @link https://wordpress.org/gutenberg/handbook/block-api/block-edit-save/
+	 * @link https://emediafinder.org/
 	 *
 	 * @param {Object} props Props.
 	 * @returns {Mixed} JSX Component.
 	 */
 	edit: (props) => {
+		// vars
 		const emKey = encodeURIComponent(credentials.emdb_entermediakey);
 		const emServer = credentials.emdb_cdn_prefix;
 		const { attributes, setAttributes } = props;
+		var inputId = props.attributes.emInputId;
+		// making sure jquery works on both $ and jQuery
+		$ = jQuery;
 
+		/*
+		* Creation of simple guid for make each block unique
+		*/
 		function guid() {
 			const S4 = function () {
 				return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
 			};
 			return (S4() + S4() + S4() + S4() + S4() + S4() + S4() + S4());
 		}
-		var inputId = props.attributes.emInputId;
-		if (!props.attributes.emInputId) {
-			inputId = `em${guid()}`;
-			props.setAttributes({ emInputId: inputId });
-		}
-		function SaveUrl(event) { props.setAttributes({ url: event.target.value }); }
-		$ = jQuery;
 
+		/*
+		* save url value
+		*/
+		function SaveUrl(event) { props.setAttributes({ url: event.target.value }); }
 		function CheckForChanges() {
 			if (checker) { clearInterval(checker); }
 			var checker = setInterval(() => {
@@ -94,6 +93,13 @@ registerBlockType('cgb/block-emedia-finder', {
 			}, 1000);
 		}
 
+		/*
+		* SideBar setup for the image
+		* includes, columns display (in case of multiple images)
+		* Image Text, in the center of the image
+		* font seetings
+		* image color background
+		*/
 		function SideMenu() {
 			const galleryOpt = attributes.galleryType === 1 ? (
 				<PanelBody title="Gallery Settings" initialOpen={true}>
@@ -113,8 +119,8 @@ registerBlockType('cgb/block-emedia-finder', {
 					<PanelRow>
 						<TextControl
 							label="Title"
-							format="string"             // Default is 'element'. Wouldn't work for a tag attribute
-							onChange={(newval) => setAttributes({ imageText: newval })} // onChange event callback
+							format="string"
+							onChange={(newval) => setAttributes({ imageText: newval })}
 							value={attributes.imageText}
 						/>
 					</PanelRow>
@@ -138,7 +144,7 @@ registerBlockType('cgb/block-emedia-finder', {
 							<div class="col-sm-4">
 								<TextControl
 									format="number"
-									onChange={(newval) => setAttributes({ imageTextSize: newval })} // onChange event callback
+									onChange={(newval) => setAttributes({ imageTextSize: newval })}
 									value={attributes.imageTextSize}
 								/>
 							</div>
@@ -165,13 +171,6 @@ registerBlockType('cgb/block-emedia-finder', {
 							disableAlpha
 						/>
 					</PanelRow>
-					{/* <PanelRow>
-						<CheckboxControl
-							label="Activate lasers?"
-							checked={attributes.activateLasers}
-							onChange={(newval) => setAttributes({ activateLasers: newval })}
-						/>
-					</PanelRow> */}
 				</PanelBody>
 			) : null;
 			return (
@@ -181,6 +180,10 @@ registerBlockType('cgb/block-emedia-finder', {
 					{imageCoverOpt}
 				</InspectorControls>);
 		}
+
+		/*
+		* Show selected Image on edit. close to what it will look like in the public block
+		*/
 		function ShowSelectedImage() {
 			var urls = [];
 			var isVideo = false;
@@ -237,6 +240,9 @@ registerBlockType('cgb/block-emedia-finder', {
 			return content;
 		}
 
+		/*
+		* Main Block, containg buttons that will bring up the main modals for selecting assets
+		*/
 		function EmBox() {
 			const href = `${credentials.emdb_cdn_prefix}/finder/blockfind/index.html`;
 			const hrefUpload = `${credentials.emdb_cdn_prefix}/finder/blockfind/views/modules/asset/add/start.html`;
@@ -274,6 +280,9 @@ registerBlockType('cgb/block-emedia-finder', {
 			);
 		}
 
+		/*
+		* Error Displaying Missing Configuration on Settings site
+		*/
 		function MissingSettings() {
 			const url = `${location.protocol}//${location.hostname}${(location.port ? ':' + location.port : '')}/wp-admin/options-general.php?page=emdb-publish`;
 			return (
@@ -296,24 +305,32 @@ registerBlockType('cgb/block-emedia-finder', {
 			);
 		}
 
+		// assigning unique value to url input (in case of multiple blocks)
+		if (!props.attributes.emInputId) {
+			inputId = `em${guid()}`;
+			props.setAttributes({ emInputId: inputId });
+		}
+
+		// checking all settings are configured properly
 		if (credentials.emdb_cdn_prefix && credentials.emdb_entermediakey && credentials.emdb_collectionid) {
+			// displaying main block
 			return EmBox();
 		}
+		// in case a configuration is missing
 		return MissingSettings();
 	},
 
 	/**
-	 * The save function defines the way in which the different attributes should be combined
-	 * into the final markup, which is then serialized by Gutenberg into post_content.
-	 *
-	 * The "save" property must be specified and must be a valid function.
-	 *
-	 * @link https://wordpress.org/gutenberg/handbook/block-api/block-edit-save/
+	 * public block
+	 * @link https://emediafinder.org/
 	 *
 	 * @param {Object} props Props.
 	 * @returns {Mixed} JSX Frontend HTML.
 	 */
 	save: (props) => {
+		/*
+		* Simple view, showing images or video from saved URL using editor
+		*/
 		function ShowSelectedImage() {
 			var urls = [];
 			var isVideo = false;
