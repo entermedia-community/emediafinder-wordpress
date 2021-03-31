@@ -219,7 +219,7 @@
         var urlPath = "/entermediadb/mediadb/services/authentication/workspacesonteam.json";
         const emKey = document.getElementById('emdb_entermediakey');
         const encodedKey = encodeURIComponent(emKey.value);
-        const url = encodeURI(`${emHost}${urlPath}?entermedia.key=`); // dont re-encode email here
+        const url = encodeURI(`${emHost}${urlPath}?noredirect=true&entermedia.key=`); // dont re-encode email here
         const resp = HttpPost(url + encodedKey, {});
         if (resp.status === 200) {
             workspaces = JSON.parse(resp.response);
