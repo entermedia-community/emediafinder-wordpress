@@ -250,6 +250,7 @@
         const req = HttpPost(url + encodedKey, {}, true);
         req.onload = function() {
             if (req.readyState === 4) {
+                block.style.display = "none";
                 if (req.status === 200) {
                     workspaces = JSON.parse(req.response);
                     const workspaceSelect = document.getElementById('emcatalogs');
@@ -271,10 +272,7 @@
                 } else {
                     NoWorkspace();
                 }
-                console.log('httpreq', url)
-                block.style.display = "none";
             }
-            console.log('loading?');
         };
     }
     setTimeout(() => {
