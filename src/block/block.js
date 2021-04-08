@@ -189,8 +189,9 @@ registerBlockType('cgb/block-emedia-finder', {
 			var isVideo = false;
 			if (props.attributes.url) {
 				urls = props.attributes.url.toString().split(',');
-				isVideo = urls[0].indexOf("videohls") > 0 ? true : false;
+				isVideo = urls[0].indexOf("videohls") > 0 || urls[0].indexOf("previewffmpeg") > 0 ? true : false;
 			}
+			// https://bloisha-132.t47.entermediadb.net/finder/mediadb/services/distribution/published/7f077e62-3b02-4b37-8640-1e700929a313/previewffmpeg
 			var content = <div></div>;
 			if (isVideo) {
 				const vidStyle = {

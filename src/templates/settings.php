@@ -23,6 +23,14 @@
     }
 </style>
 
+<div id="loadblock" class="text-center" style="position:fixed;top:50%;left:50%;transform:translate(-50%, -50%);display:none;">
+    <div class="card">
+        <div class="card-body text-center">
+            <div class="spinner-border"></div><br>
+            <label>Loading Your Workspace, Please wait...</label>
+        </div>
+    </div>
+</div>
 
 <div class="wrap">
     <h2>eMediaFinder Settings</h2>
@@ -166,13 +174,30 @@
     //     return xmlHttp; //.responseText;
     // }
 
-    function HttpPost(url, data) {
+    function HttpPost(url, data, async) {
         var xmlHttp = new XMLHttpRequest();
-        xmlHttp.open("POST", url, false);
-        xmlHttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xmlHttp.open("POST", url, async);
+        // xmlHttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xmlHttp.send(JSON.stringify(data));
         return xmlHttp;
     }
+
+    // function HttpPostAsync(url, data) {
+    //     var xhr = new XMLHttpRequest();
+    //     xhr.onload = function() {
+    //         if (xhr.readyState === 4) {
+    //             if (xhr.status === 200) {
+
+    //             } else {
+
+    //             }
+    //             console.log('httpreq', url)
+    //         }
+    //     };
+    //     xhr.open("POST", url, true);
+    //     xmlHttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    //     xmlHttp.send(JSON.stringify(data));
+    // }
 
     function alertEmail(message, divid) {
         const alertDiv = document.getElementById(divid);
@@ -192,7 +217,7 @@
         const urlPath = '/entermediadb/mediadb/services/authentication/emailwordpress.json'
         const encodedEmail = encodeURIComponent(email.value);
         const url = encodeURI(`${emHost}${urlPath}?to=`); // dont re-encode email here
-        const resp = HttpPost(url + encodedEmail, {});
+        const resp = HttpPost(url + encodedEmail, {}, false);
         if (resp.status === 200) {
             alertEmail('Email sent, please check your email don\'t forget to check spam folder', 'alertmail');
         } else {
@@ -216,32 +241,41 @@
     }
 
     function getWorkSpaces() {
+        const block = document.getElementById('loadblock');
+        block.style.display = "block";
         var urlPath = "/entermediadb/mediadb/services/authentication/workspacesonteam.json";
         const emKey = document.getElementById('emdb_entermediakey');
         const encodedKey = encodeURIComponent(emKey.value);
         const url = encodeURI(`${emHost}${urlPath}?noredirect=true&entermedia.key=`); // dont re-encode email here
-        const resp = HttpPost(url + encodedKey, {});
-        if (resp.status === 200) {
-            workspaces = JSON.parse(resp.response);
-            const workspaceSelect = document.getElementById('emcatalogs');
-            workspaceSelect.innerHTML = '';
-            const selectOpt = document.createElement('option');
-            selectOpt.text = "-- Select Workspace URL --";
-            selectOpt.hidden = true;
-            workspaceSelect.add(selectOpt);
-            if (workspaces.workspaces.length > 0) {
-                workspaces.workspaces.forEach(w => {
-                    const option = document.createElement('option');
-                    option.value = w.url;
-                    option.text = w.url;
-                    workspaceSelect.add(option);
-                });
-            } else {
-                NoWorkspace();
+        const req = HttpPost(url + encodedKey, {}, true);
+        req.onload = function() {
+            if (req.readyState === 4) {
+                if (req.status === 200) {
+                    workspaces = JSON.parse(req.response);
+                    const workspaceSelect = document.getElementById('emcatalogs');
+                    workspaceSelect.innerHTML = '';
+                    const selectOpt = document.createElement('option');
+                    selectOpt.text = "-- Select Workspace URL --";
+                    selectOpt.hidden = true;
+                    workspaceSelect.add(selectOpt);
+                    if (workspaces.workspaces.length > 0) {
+                        workspaces.workspaces.forEach(w => {
+                            const option = document.createElement('option');
+                            option.value = w.url;
+                            option.text = w.url;
+                            workspaceSelect.add(option);
+                        });
+                    } else {
+                        NoWorkspace();
+                    }
+                } else {
+                    NoWorkspace();
+                }
+                console.log('httpreq', url)
+                block.style.display = "none";
             }
-        } else {
-            NoWorkspace();
-        }
+            console.log('loading?');
+        };
     }
     setTimeout(() => {
         init();
