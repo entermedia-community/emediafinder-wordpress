@@ -2,7 +2,7 @@
 
 /**
  * Plugin Name: eMediaFinder
- * Plugin URI: https://emediafinder.com
+ * Plugin URI: https://emediafinder.com/product/media-finder-wordpress.html
  * Description: eMediafinder Gallery selector
  * Author: EnterMediaDB team
  * Author URI: https://emediafinder.com
