@@ -66,16 +66,7 @@ function emedia_finder_cgb_block_assets()
 		]
 	);
 
-	// wp_register_script(
-	// 	'emedia_finder-cgb-block-js', // Handle.
-	// 	plugins_url('src/blockfind.js', dirname(__FILE__)), // Block.build.js: We register the block here. Built with Webpack.
-	// 	array('wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor'), // Dependencies, defined above.
-	// 	null, // filemtime( plugin_dir_path( __DIR__ ) . 'dist/blocks.build.js' ), // Version: filemtime — Gets file modification time.
-	// 	true // Enqueue the script in the footer.
-	// );
-	// $emfinderHost = 'https://critobaltunnel.t47.entermediadb.net';
 	$emfinderHost = get_option('emdb_cdn_prefix');
-	// $entermedia_key = get_option('emdb_entermediakey');
 	if ($emfinderHost != '') {
 		wp_register_script('blockfind', $emfinderHost . '/finder/blockfind/components/javascript/blockfind.js', '', '', true);
 		wp_enqueue_script('blockfind');
@@ -97,16 +88,6 @@ function emedia_finder_cgb_block_assets()
 		false
 	);
 	wp_enqueue_script('myfirstscript');
-
-
-	// $cdn_prefix = 'http://localhost:8089';
-	// $mediadbappid = '/finder/blockfind';
-	// wp_enqueue_script('embed_collection_js_entermedia', $cdn_prefix . $mediadbappid . '/components/javascript/liveajax/liveajax.js');
-
-	// wp_enqueue_style('embed_collection_css_results', $cdn_prefix . $mediadbappid . '/components/javascript/bootstrap/4.5.3/css/bootstrap.min.css');
-	// wp_enqueue_style('embed_collection_css_mediaplayer', $cdn_prefix . $mediadbappid . '/components/javascript/jquery-ui/1.12/jquery-ui.css');
-	// wp_enqueue_style('embed_collection_css_mediaplayer', $cdn_prefix . $mediadbappid . '/components/javascript/bootstrap/fonts/css/fontawesome-all.min.css');
-	// wp_enqueue_style('embed_collection_css_mediaplayer', $cdn_prefix . $mediadbappid . '/components/javascript/grid/grid.css');
 
 	/**
 	 * Register Gutenberg block on server-side.
@@ -143,75 +124,6 @@ function emedia_finder_cgb_block_assets()
 			'emdb_collectionid' => get_option('emdb_collectionid')
 		)
 	);
-
-	// require_once plugin_dir_path(__FILE__) . 'blockfind.js';
 }
 
-// Hook: Block assets.
 add_action('init', 'emedia_finder_cgb_block_assets');
-
-
-// globals?
-// $jsessionid = "";
-
-// add_action('init', 'set_cors_headers');
-// function set_cors_headers()
-// {
-// 	header('Access-Control-Allow-Origin: *', true);
-// 	header('Referrer-Policy: unsafe-url', true);
-// 	header('X-XSS-Protection: 1; mode=block', true);
-// 	header('X-Content-Type-Options: nosniff', true);
-// }
-
-// custom
-// add_action('init', 'maybe_direct_html_output');
-// function maybe_direct_html_output()
-// {
-// 	$htmlrelpath = $_SERVER['REQUEST_URI'];
-
-// 	if (!$htmlrelpath) {
-// 		return;
-// 	}
-
-
-// 	if (strpos($htmlrelpath, "/finder") === 0) {
-// 		// $htmlfilepath = WP_CONTENT_DIR.$htmlrelpath;
-// 		// echo "hello world";
-// 		$cdn_prefix = "https://em10.entermediadb.org";
-// 		// $mediadbappid = "finder";
-// 		$collection_page_url = $cdn_prefix . $htmlrelpath;
-
-// 		// echo $collection_page_url;
-// 		$emkey = "adminmd5421c0af185908a6c0c40d50fd5e3f16760d5580bc";
-// 		$opts = array(
-// 			'http' => array(
-// 				'header' => array(
-// 					"X-token: $emkey",
-// 					"X-tokentype: entermedia",
-// 					"Cookie: " . $GLOBALS['jsessionid']
-// 				)
-// 			)
-// 		);
-
-// 		$context = stream_context_create($opts);
-// 		$content =  file_get_contents($collection_page_url, false, $context);
-
-// 		file_get_contents('http://example.org');
-
-// 		$cookies = array();
-// 		foreach ($http_response_header as $hdr) {
-// 			if (preg_match('/^Set-Cookie:\s*([^;]+)/', $hdr, $matches)) {
-// 				parse_str($matches[1], $tmp);
-// 				$cookies += $tmp;
-// 				if (strpos($tmp, "JSESSIONID") === 0) {
-// 					$GLOBALS['jsessionid'] = $tmp;
-// 				}
-// 			}
-// 		}
-// 		// print_r($cookies);
-// 		echo $content;
-// 		exit;
-// 		// if (!file_exists($htmlfilepath)) {return;}
-// 		// echo file_get_contents($htmlrelpath); exit;
-// 	}
-// }

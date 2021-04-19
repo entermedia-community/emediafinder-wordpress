@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Plugin Name: eMediaFinder Gallery
+ * Plugin Name: eMediaFinder
  * Plugin URI: https://emediafinder.com
  * Description: eMediafinder Gallery selector
  * Author: EnterMediaDB team

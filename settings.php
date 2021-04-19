@@ -13,22 +13,6 @@ function emdb_admin_init()
     register_setting('emdb-publish_options', 'emdb_cdn_prefix');
 	register_setting('emdb-publish_options', 'emdb_entermediakey');
     register_setting('emdb-publish_options', 'emdb_collectionid');
-	// register_setting('emdb-publish_options', 'emdb_mediadbappid');
-    // register_setting('emdb-publish_options', 'emdb_user');
-    // register_setting('emdb-publish_options', 'emdb_pass');
-
-    //add_settings_section('api_settings', 'API Settings', 'plugin_section_text', 'emdb-publish');
-
-    // register_setting('emdb-publish', 'emdb_cdn_prefix');
-    // register_setting('emdb-publish', 'emdb_entermediakey');
-    // register_setting('emdb-publish', 'emdb_mediadbappid');
-
-    // add_settings_field('emdb_cdn', 'CDN', 'emdb_publish_cdn', 'emdb-publish', 'api_settings');
-    // add_settings_field('emdb_user', 'User', 'emdb_publish_user', 'emdb-publish', 'api_settings');
-    // add_settings_field('emdb_pass', 'Pass', 'emdb_publish_pass', 'emdb-publish', 'api_settings');
-
-    // add_settings_field('emdb_entermediakey', 'EM Key', 'emdb-publish', 'api_settings');
-    // add_settings_field('emdb_mediadbappid', 'API Key', 'emdb-publish', 'api_settings');
 }
 
 
@@ -42,30 +26,6 @@ function emdb_plugin_settings_page()
     // Render the settings template
     include(sprintf("%s/templates/settings.php", dirname(__FILE__)));
 }
-
-// function plugin_section_text()
-// {
-//     echo '<p>Here you can set all the options for using the API</p>';
-// }
-
-// function emdb_publish_cdn()
-// {
-//     $options = get_option('emdb_cdn');
-//     printf('<input id="emdb_cdn" name="emdb_cdn" type="text" value="%s" />',esc_attr($options));
-// }
-
-// function emdb_publish_user()
-// {
-//     $options = get_option('emdb_user');
-//     printf('<input id="emdb_user" name="emdb_user" type="text" value="%s" />',esc_attr($options));
-// }
-
-// function emdb_publish_pass()
-// {
-//     $options = get_option('emdb_pass');
-//     printf('<input id="emdb_pass" name="emdb_pass" type="text" value="%s" />',esc_attr($options));
-// }
-
 
 add_action('admin_menu', 'add_emdb_settings_menu');
 function add_emdb_settings_menu()
