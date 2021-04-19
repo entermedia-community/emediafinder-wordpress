@@ -30,7 +30,7 @@ const { RichText, InspectorControls } = wp.blockEditor;
 
 
 registerBlockType('cgb/block-emedia-finder', {
-	title: __('eMediaFinder gallery'),
+	title: __('eMediaFinder'),
 	icon: 'format-gallery',
 	category: 'common',
 	keywords: [
