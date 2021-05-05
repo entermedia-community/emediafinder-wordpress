@@ -95,44 +95,4 @@
 
     </form>
 
-    <div class="card-header alert-primary">
-        <h5>User Management
-            <button class="btn btn-secondary" style="float:right" onclick="GetUsersFromTeam()">Refresh List</button>
-        </h5>
-        <span id="team_link"></span>
-    </div>
-    <label>Add New User</label><br>
-    <label class="text-muted">This will add a user only on emediafinder.org</label>
-    <table class="table">
-        <tr>
-            <th>Email</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-        </tr>
-        <tr>
-            <td><input type="text" placeholder="name@domain.com" class="form-control" id="add-team-email" /></td>
-            <td><input type="text" placeholder="John" class="form-control" id="add-team-firstname" /></td>
-            <td><input type="text" placeholder="Doe" class="form-control" id="add-team-lastname" /></td>
-        </tr>
-        <tr colspan="3">
-            <td class="text-right">
-                <button type="button" class="btn btn-success" onclick="AddMemberToTeam()">Add User to Team</button>
-            </td>
-        </tr>
-    </table>
-    <label>Current User</label><br>
-    <div class="table-responsive">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Enabled</th>
-                    <th>Email</th>
-                    <th>Name</th>
-                    <th>Type</th>
-                </tr>
-            </thead>
-            <tbody id="user-table"> </tbody>
-        </table>
-    </div>
-
 </div>

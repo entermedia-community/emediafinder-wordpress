@@ -128,5 +128,6 @@ function emedia_finder_cgb_block_assets()
 			'main_server' => get_option('emdb_main_server')
 		)
 	);
-
 }
+
+add_action('init', 'emedia_finder_cgb_block_assets');
