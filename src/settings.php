@@ -37,12 +37,12 @@ function add_emdb_settings_menu()
 /* load js and styles for admin sites */
 function load_custom_wp_admin_style()
 {
-    wp_register_style('custom_wp_admin_css_bootstrap', plugins_url() . '/emedia-finder/assets/bootstrap.min.css', false, '5.0.0-beta3');
+    $plugin_path = '/wp-content/plugins/emedia-finder';
+    wp_register_style('custom_wp_admin_css_bootstrap', $plugin_path . '/assets/bootstrap.min.css', false, '5.0.0-beta3');
     wp_enqueue_style('custom_wp_admin_css_bootstrap');
-    wp_register_style('custom_wp_admin_css', plugins_url() . '/emedia-finder/assets/admin.css', false, '1.0.0');
+    wp_register_style('custom_wp_admin_css', $plugin_path . '/assets/admin.css', false, '1.0.0');
     wp_enqueue_style('custom_wp_admin_css');
-    wp_register_script('emdb_admin_js', plugins_url() . '/emedia-finder/assets/admin.js', '', '', true);
+    wp_register_script('emdb_admin_js', $plugin_path . '/assets/admin.js', '', '', true);
     wp_enqueue_script('emdb_admin_js');
 }
 add_action('admin_enqueue_scripts', 'load_custom_wp_admin_style');
-
