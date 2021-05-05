@@ -37,7 +37,7 @@ function add_emdb_settings_menu()
 /* load js and styles for admin sites */
 function load_custom_wp_admin_style()
 {
-    $plugin_path = '/wp-content/plugins/emedia-finder';
+    $plugin_path = '/wp-content/plugins/emediafinder-wordpress';
     wp_register_style('custom_wp_admin_css_bootstrap', $plugin_path . '/assets/bootstrap.min.css', false, '5.0.0-beta3');
     wp_enqueue_style('custom_wp_admin_css_bootstrap');
     wp_register_style('custom_wp_admin_css', $plugin_path . '/assets/admin.css', false, '1.0.0');
