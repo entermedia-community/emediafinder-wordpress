@@ -48,7 +48,8 @@ registerBlockType('cgb/block-emedia-finder', {
 		favoriteColor: { type: 'string', default: '#DDDDDD' },
 		activateLasers: { type: 'boolean', default: false },
 		galleryType: { type: 'number', default: 0 }, // 0 image, 1 gallery, 2 video
-		galleryColSize: { type: 'number', default: 2 }
+		galleryColSize: { type: 'number', default: 2 },
+		showEmailMsg: { type: 'boolean', default: false }
 	},
 
 	/**
@@ -61,15 +62,29 @@ registerBlockType('cgb/block-emedia-finder', {
 	 */
 	edit: (props) => {
 		// vars
-		const emKey = encodeURIComponent(credentials.emdb_entermediakey);
-		const emServer = credentials.emdb_cdn_prefix;
 		const { attributes, setAttributes } = props;
+		const cookieName = 'mediafinderkey';
+		const loggedUser = credentials.emdb_current_wp_user.data.user_email;
+		const blockHeader = // Block header
+			<div class="components-placeholder__label">
+				<span class="block-editor-block-icon">
+					<svg width="24" height="24" viewBox="0 0 24 24" role="img" aria-hidden="true" focusable="false">
+						<path
+							d="M18.7 3H5.3C4 3 3 4 3 5.3v13.4C3 20 4 21 5.3 21h13.4c1.3 0 2.3-1 2.3-2.3V5.3C21 4 20 3 18.7 3zm.8 15.7c0 .4-.4.8-.8.8H5.3c-.4 0-.8-.4-.8-.8V5.3c0-.4.4-.8.8-.8h6.2v8.9l2.5-3.1 2.5 3.1V4.5h2.2c.4 0 .8.4.8.8v13.4z">
+						</path>
+					</svg>
+				</span>
+			eMedia Finder
+			</div>;
+
 		var inputId = props.attributes.emInputId;
+
+
 		// making sure jquery works on both $ and jQuery
 		$ = jQuery;
 
 		/*
-		* Creation of simple guid for make each block unique
+		* Creation of simple guid to make each block unique
 		*/
 		function guid() {
 			const S4 = function () {
@@ -92,6 +107,33 @@ registerBlockType('cgb/block-emedia-finder', {
 				}
 			}, 1000);
 		}
+
+		/*
+		* cookie managers
+		* Leaving commented code, in case we need it in the future
+		function GetCookie(cookieId) {
+			var dc = document.cookie;
+			var prefix = cookieId + "=";
+			var begin = dc.indexOf("; " + prefix);
+			if (begin == -1) {
+				begin = dc.indexOf(prefix);
+				if (begin != 0) return null;
+			}
+			else {
+				begin += 2;
+				var end = document.cookie.indexOf(";", begin);
+				if (end == -1) {
+					end = dc.length;
+				}
+			}
+			return decodeURI(dc.substring(begin + prefix.length, end));
+		}
+		function RemoveCookie(cookieId) {
+			if (GetCookie(cookieId)) {
+				document.cookie = cookieId + '=; Max-Age=-99999999;';
+			}
+		}
+		*/
 
 		/*
 		* SideBar setup for the image
@@ -191,7 +233,6 @@ registerBlockType('cgb/block-emedia-finder', {
 				urls = props.attributes.url.toString().split(',');
 				isVideo = urls[0].indexOf("videohls") > 0 || urls[0].indexOf("previewffmpeg") > 0 ? true : false;
 			}
-			// https://bloisha-132.t47.entermediadb.net/finder/mediadb/services/distribution/published/7f077e62-3b02-4b37-8640-1e700929a313/previewffmpeg
 			var content = <div></div>;
 			if (isVideo) {
 				const vidStyle = {
@@ -254,26 +295,17 @@ registerBlockType('cgb/block-emedia-finder', {
 					{SideMenu()}
 					{ShowSelectedImage()}
 					<div class="components-placeholder block-editor-media-placeholder is-large">
-						<div class="components-placeholder__label">
-							<span class="block-editor-block-icon">
-								<svg width="24" height="24" viewBox="0 0 24 24" role="img" aria-hidden="true" focusable="false">
-									<path
-										d="M18.7 3H5.3C4 3 3 4 3 5.3v13.4C3 20 4 21 5.3 21h13.4c1.3 0 2.3-1 2.3-2.3V5.3C21 4 20 3 18.7 3zm.8 15.7c0 .4-.4.8-.8.8H5.3c-.4 0-.8-.4-.8-.8V5.3c0-.4.4-.8.8-.8h6.2v8.9l2.5-3.1 2.5 3.1V4.5h2.2c.4 0 .8.4.8.8v13.4z">
-									</path>
-								</svg>
-							</span>
-							eMedia Finder
-						</div>
+						{blockHeader}
 						<input id={inputId} type="text" class="form-control" value={props.attributes.url} onChange={SaveUrl} />
 
 						<div class="components-placeholder__instructions">Search an image or video file, or pick one from your media library.</div>
 						<div class="components-placeholder__fieldset">
 							<div class="components-drop-zone"></div>
 							<div class="components-form-file-upload">
-								<a href="" class="emediafinder components-button is-primary" onClick={CheckForChanges} id={linkUploadId} data-emhref={hrefUpload}
-									data-emkey={emKey} data-inputidupload={attributes.emInputId} data-collectionid={credentials.emdb_collectionid}>Uploader</a>
-								<a href="" class="emediafinder components-button is-tertiary" onClick={CheckForChanges} id={linkGalleryId} data-emhref={href}
-									data-emkey={emKey} data-inputidupload={attributes.emInputId} data-collectionid={credentials.emdb_collectionid}>View Finder</a>
+								<a href="" class="emediafinder components-button is-primary" onClick={CheckForChanges} id={linkUploadId} data-emhref={hrefUpload} data-email={loggedUser}
+									data-emkey={credentials.emdb_adminkey} data-inputidupload={attributes.emInputId} data-collectionid={credentials.emdb_collectionid}>Uploader</a>
+								<a href="" class="emediafinder components-button is-tertiary" onClick={CheckForChanges} id={linkGalleryId} data-emhref={href} data-email={loggedUser}
+									data-emkey={credentials.emdb_adminkey} data-inputidupload={attributes.emInputId} data-collectionid={credentials.emdb_collectionid}>View Finder</a>
 							</div>
 						</div>
 					</div>
@@ -284,41 +316,52 @@ registerBlockType('cgb/block-emedia-finder', {
 		/*
 		* Error Displaying Missing Configuration on Settings site
 		*/
-		function MissingSettings() {
+		function MissingSettings(msg) {
 			const url = `${location.protocol}//${location.hostname}${(location.port ? ':' + location.port : '')}/wp-admin/options-general.php?page=emdb-publish`;
 			return (
 				<body>
 					<div class="components-placeholder block-editor-media-placeholder is-large">
-						<div class="components-placeholder__label">
-							<span class="block-editor-block-icon">
-								<svg width="24" height="24" viewBox="0 0 24 24" role="img" aria-hidden="true" focusable="false">
-									<path
-										d="M18.7 3H5.3C4 3 3 4 3 5.3v13.4C3 20 4 21 5.3 21h13.4c1.3 0 2.3-1 2.3-2.3V5.3C21 4 20 3 18.7 3zm.8 15.7c0 .4-.4.8-.8.8H5.3c-.4 0-.8-.4-.8-.8V5.3c0-.4.4-.8.8-.8h6.2v8.9l2.5-3.1 2.5 3.1V4.5h2.2c.4 0 .8.4.8.8v13.4z">
-									</path>
-								</svg>
-							</span>
-							eMedia Finder
-						</div>
-						<div class="components-placeholder__instructions">You must configure your settings</div>
+						{blockHeader}
+						<div class="components-placeholder__instructions">An error was detected:</div>
+						<div class="alert alert-warning">{msg}</div>
 						<a href={url}>WordPress eMedia Finder Settings</a>
 					</div>
 				</body>
 			);
 		}
 
-		// assigning unique value to url input (in case of multiple blocks)
-		if (!props.attributes.emInputId) {
-			inputId = `em${guid()}`;
-			props.setAttributes({ emInputId: inputId });
+		/*
+		* Leaving http POST|GET commented code. for the future
+		function HttpPost(url, data) {
+			const requestOptions = {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(data)
+			};
+			return fetch(url, requestOptions);
 		}
 
-		// checking all settings are configured properly
-		if (credentials.emdb_cdn_prefix && credentials.emdb_entermediakey && credentials.emdb_collectionid) {
-			// displaying main block
-			return EmBox();
+		function HttpGet(url) {
+			const headers = { 'Content-Type': 'application/json' }
+			return fetch(url, { headers });
 		}
+		function ValidateKey() {
+			const validateUrl = `${credentials.emdb_cdn_prefix}/finder/mediadb/services/settings/users/data/admin?entermediadb.key=${emKey}`;
+			return true;
+		}
+		*/
+
+		// assigning unique value to url input (in case of multiple blocks)
+		if (!props.attributes.emInputId) { props.setAttributes({ emInputId: `em${guid()}` }); }
+		// Configuration Checks
+		if (!credentials.emdb_adminkey) { return MissingSettings("Missing access key, please click below for configuring access key in wordpress configuration, or ask wordpress administrator"); }
+		if (!credentials.emdb_current_wp_user) { return MissingSettings("Email is not present on wordpress configuration"); }
+
+		// checking all settings are configured properly
+		if (credentials.emdb_cdn_prefix && credentials.emdb_entermediakey && credentials.emdb_collectionid) { return EmBox(); }
+
 		// in case a configuration is missing
-		return MissingSettings();
+		return MissingSettings('You must configure all required settings for eMediaFinder in Wordpress settings');
 	},
 
 	/**

@@ -1,43 +1,24 @@
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
-<style>
-    .wp-core-ui select.form-select {
-        display: block;
-        width: 100%;
-        max-width: 100%;
-        padding: .375rem 2.25rem .375rem .75rem;
-        font-size: 1rem;
-        font-weight: 400;
-        line-height: 1.5;
-        color: #212529;
-        background-color: #fff;
-        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
-        background-repeat: no-repeat;
-        background-position: right .75rem center;
-        background-size: 16px 12px;
-        border: 1px solid #ced4da;
-        border-radius: .25rem;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        appearance: none;
-    }
-</style>
 
 <div id="loadblock" class="text-center" style="position:fixed;top:50%;left:50%;transform:translate(-50%, -50%);display:none;">
     <div class="card">
         <div class="card-body text-center">
             <div class="spinner-border"></div><br>
-            <label>Loading Your Workspace, Please wait...</label>
+            <label id="loading-message"></label>
         </div>
     </div>
 </div>
 
 <div class="wrap">
-    <h2>eMediaFinder Settings</h2>
     <form method="post" action="options.php">
+        <div class="card-header alert-primary">
+            <h2>eMediaFinder Settings
+                <input name="submit" class="btn btn-primary btn-xl" style="float:right" type="submit" value="<?php esc_attr_e('Save'); ?>" />
+            </h2>
+        </div>
         <?php
         settings_fields('emdb-publish_options');
         do_settings_fields('emdb-publish', 'api_settings');
+        echo '<script>var wpUsers = ', json_encode(get_users($users)), ';</script>';
         ?>
         <!-- TODO: make a dropdown that gets workspaces from emediafinder -->
         <a href="https://entermediadb.org">entermediadb.org</a>
@@ -52,15 +33,18 @@
         <div class="table-responsive">
             <table class="table">
                 <tr valign="top">
+                    <th scope="row"><label for="emdb_main_server">Your eMediaFinder register server</label></th>
+                    <td>
+                        <input type="text" name="emdb_main_server" id="emdb_main_server" value="<?php echo get_option('emdb_main_server'); ?>" class="form-control" placeholder="https://emediafinder.com" />
+                    </td>
+                </tr>
+                <tr valign="top">
                     <th scope="row"><label for="emdb_email">Your eMediaFinder email</label></th>
                     <td>
                         <input type="text" name="emdb_email" id="emdb_email" value="<?php echo get_option('emdb_email'); ?>" class="form-control" placeholder="myemail@myhost.com" />
-                        <label class="text-muted">You can register your email at <a href="https://emediafinder.com">emediafinder</a></label>
-                    </td>
-                </tr>
-                <tr>
-                    <td><input id="sendemail" class="button button-primary" type="button" value="Send Email" onclick="sendEmail()" /></td>
-                    <td>
+                        <input id="sendemail" class="button button-primary" type="button" value="Activate Account" onclick="sendEmail()" /><br>
+                        <!-- <label class="text-muted">You can register your email at <a href="https://emediafinder.com">emediafinder</a></label> -->
+
                         <div id="alertmail" class="alert alert-success" style="display: none"></div>
                         <div id="alerterror" class="alert alert-danger" style="display: none"></div>
                     </td>
@@ -68,28 +52,12 @@
                 <tr valign="top">
                     <th scope="row"><label for="emdb_entermediakey">EntermediaDB Cloud Key</label></th>
                     <td>
-                        <input type="text" name="emdb_entermediakey" id="emdb_entermediakey" value="<?php echo get_option('emdb_entermediakey'); ?>" class="form-control" placeholder="apikeyhere" />
-                        <label class="text-muted">Corresponds to the Access Key sent to your email</label>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <input id="getworkspace" class="button button-primary" type="button" value="Get Workspaces" onclick="getWorkSpaces()" />
-                    </td>
-                    <td>
+                        <input type="text" name="emdb_entermediakey" id="emdb_entermediakey" value="<?php echo get_option('emdb_entermediakey'); ?>" oninput="GetWorkSpaces()" class="form-control" placeholder="apikeyhere" />
+                        <label class="text-muted">Corresponds to the Access Key sent to your email</label><br>
+                        <!-- <input id="getworkspace" class="button button-primary" type="button" value="Get Workspaces" onclick="GetWorkSpaces()" /> -->
                         <div id="workspacesuccess" class="alert alert-success" style="display: none"></div>
                         <div id="workspacedanger" class="alert alert-danger" style="display: none"></div>
                     </td>
-                </tr>
-
-                <tr valign="top">
-                    <!-- <th scope="row"><label for="emdb_cdn_prefix">Catalog</label></th>
-                <td>
-                    <input type="text" name="emdb_cdn_prefix" id="emdb_cdn_prefix" value="<?php echo get_option('emdb_cdn_prefix'); ?>" placeholder="https://x.x.x.x:xxx" />
-                    <span style="padding-left:5em;">corresponds to catalogsettings/cdn_prefix (domain for your EnterMedia server if not set)</span>
-                </td> -->
-                    <!-- adminmd5421c0af185908a6c0c40d50fd5e3f16760d5580bc -->
-                    <!-- https://critobaltunnel.t47.entermediadb.net -->
                 </tr>
 
                 <tr valign="top">
@@ -112,170 +80,59 @@
                     <td>
                         <input type="text" name="emdb_collectionid" id="emdb_collectionid" value="<?php echo get_option('emdb_collectionid'); ?>" class="form-control" />
                         <label class="text-muted">Corresponds to your Colletion ID</label>
+                        <input type="text" name="emdb_enabled_users" id="emdb_enabled_users" value="<?php echo get_option('emdb_enabled_users'); ?>" class="form-control" hidden />
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row"><label for="emdb_cdn_prefix">Workspace Admin Key</label></th>
+                    <td>
+                        <input type="text" name="emdb_adminkey" id="emdb_adminkey" value="<?php echo get_option('emdb_adminkey'); ?>" class="form-control" />
+                        <label id="adminkey_warning" class="text-danger"></label>
                     </td>
                 </tr>
             </table>
         </div>
 
-
-
-        <input name="submit" class="button button-primary" type="submit" value="<?php esc_attr_e('Save'); ?>" />
-
     </form>
+
+    <div class="card-header alert-primary">
+        <h5>User Management
+            <button class="btn btn-secondary" style="float:right" onclick="GetUsersFromTeam()">Refresh List</button>
+        </h5>
+        <span id="team_link"></span>
+    </div>
+    <label>Add New User</label><br>
+    <label class="text-muted">This will add a user only on emediafinder.org</label>
+    <table class="table">
+        <tr>
+            <th>Email</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+        </tr>
+        <tr>
+            <td><input type="text" placeholder="name@domain.com" class="form-control" id="add-team-email" /></td>
+            <td><input type="text" placeholder="John" class="form-control" id="add-team-firstname" /></td>
+            <td><input type="text" placeholder="Doe" class="form-control" id="add-team-lastname" /></td>
+        </tr>
+        <tr colspan="3">
+            <td class="text-right">
+                <button type="button" class="btn btn-success" onclick="AddMemberToTeam()">Add User to Team</button>
+            </td>
+        </tr>
+    </table>
+    <label>Current User</label><br>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Enabled</th>
+                    <th>Email</th>
+                    <th>Name</th>
+                    <th>Type</th>
+                </tr>
+            </thead>
+            <tbody id="user-table"> </tbody>
+        </table>
+    </div>
+
 </div>
-
-<script>
-    // const emHost = 'http://localhost:8080';
-    const emHost = 'https://emediafinder.com';
-    var workspaces;
-
-    function init() {
-        const emKey = document.getElementById('emdb_entermediakey');
-        if (emKey && emKey.value) {
-            getWorkSpaces();
-            const workspaceSelect = document.getElementById('emcatalogs');
-        }
-    }
-
-    if (!Array.prototype.find) {
-        Object.defineProperty(Array.prototype, 'find', {
-            enumerable: false,
-            configurable: true,
-            writable: true,
-            value: function(predicate) {
-                if (this == null) {
-                    throw new TypeError('Array.prototype.find called on null or undefined');
-                }
-                if (typeof predicate !== 'function') {
-                    throw new TypeError('predicate must be a function');
-                }
-                var list = Object(this);
-                var length = list.length >>> 0;
-                var thisArg = arguments[1];
-                var value;
-
-                for (var i = 0; i < length; i++) {
-                    if (i in list) {
-                        value = list[i];
-                        if (predicate.call(thisArg, value, i, list)) {
-                            return value;
-                        }
-                    }
-                }
-                return undefined;
-            }
-        });
-    }
-
-    // function HttpGet(url) {
-    //     var xmlHttp = new XMLHttpRequest();
-    //     xmlHttp.open("GET", url, false);
-    //     xmlHttp.send(null);
-    //     return xmlHttp; //.responseText;
-    // }
-
-    function HttpPost(url, data, async) {
-        var xmlHttp = new XMLHttpRequest();
-        xmlHttp.open("POST", url, async);
-        // xmlHttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-        xmlHttp.send(JSON.stringify(data));
-        return xmlHttp;
-    }
-
-    // function HttpPostAsync(url, data) {
-    //     var xhr = new XMLHttpRequest();
-    //     xhr.onload = function() {
-    //         if (xhr.readyState === 4) {
-    //             if (xhr.status === 200) {
-
-    //             } else {
-
-    //             }
-    //             console.log('httpreq', url)
-    //         }
-    //     };
-    //     xhr.open("POST", url, true);
-    //     xmlHttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    //     xmlHttp.send(JSON.stringify(data));
-    // }
-
-    function alertEmail(message, divid) {
-        const alertDiv = document.getElementById(divid);
-        alertDiv.style.display = "block";
-        alertDiv.innerHTML = message;
-        setTimeout(() => {
-            alertDiv.style.display = "none";
-        }, 5000);
-    }
-
-    function sendEmail() {
-        const email = document.getElementById('emdb_email');
-        if (!email.value) {
-            alertEmail('Please type your email', 'alerterror');
-            return;
-        }
-        const urlPath = '/entermediadb/mediadb/services/authentication/emailwordpress.json'
-        const encodedEmail = encodeURIComponent(email.value);
-        const url = encodeURI(`${emHost}${urlPath}?to=`); // dont re-encode email here
-        const resp = HttpPost(url + encodedEmail, {}, false);
-        if (resp.status === 200) {
-            alertEmail('Email sent, please check your email don\'t forget to check spam folder', 'alertmail');
-        } else {
-            alertEmail('Please type a registered email', 'alerterror');
-        }
-    }
-
-    function SelectWorkspace() {
-        const selectCat = document.getElementById('emcatalogs');
-        const workspace = workspaces.workspaces.find(x => x.url === selectCat.value);
-        document.getElementById('emdb_cdn_prefix').value = workspace.url;
-        document.getElementById('emdb_collectionid').value = workspace.collectionid;
-        getWorkSpaces();
-    }
-
-    function NoWorkspace() {
-        const workspaceSelect = document.getElementById('catalogdropdown');
-        const li = document.createElement('li');
-        li.innerHTML = `<button class="dropdown-item" href="#" disabled>No Workspace found</button>`
-        workspaceSelect.appendChild(li);
-    }
-
-    function getWorkSpaces() {
-        const block = document.getElementById('loadblock');
-        block.style.display = "block";
-        var urlPath = "/entermediadb/mediadb/services/authentication/workspacesonteam.json";
-        const emKey = document.getElementById('emdb_entermediakey');
-        const encodedKey = encodeURIComponent(emKey.value);
-        const url = encodeURI(`${emHost}${urlPath}?noredirect=true&entermedia.key=`); // dont re-encode email here
-        const req = HttpPost(url + encodedKey, {}, true);
-        req.onload = function() {
-            if (req.readyState === 4) {
-                block.style.display = "none";
-                if (req.status === 200) {
-                    workspaces = JSON.parse(req.response);
-                    const workspaceSelect = document.getElementById('emcatalogs');
-                    workspaceSelect.innerHTML = '';
-                    const selectOpt = document.createElement('option');
-                    selectOpt.text = "-- Select Workspace URL --";
-                    selectOpt.hidden = true;
-                    workspaceSelect.add(selectOpt);
-                    if (workspaces.workspaces.length > 0) {
-                        workspaces.workspaces.forEach(w => {
-                            const option = document.createElement('option');
-                            option.value = w.url;
-                            option.text = w.url;
-                            workspaceSelect.add(option);
-                        });
-                    } else {
-                        NoWorkspace();
-                    }
-                } else {
-                    NoWorkspace();
-                }
-            }
-        };
-    }
-    setTimeout(() => {
-        init();
-    }, 1000);
-</script>

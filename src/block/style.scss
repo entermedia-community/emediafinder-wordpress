@@ -12,3 +12,30 @@
 	max-width: 740px;
 	padding: 2rem;
 }
+
+.text-muted {
+	color:darkgrey;
+	size: 0.8vh;
+	font-weight: normal;
+}
+
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.alert {
+    position: relative;
+    padding: .75rem 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: .25rem;
+	width: 100%;
+}
+
+.alert-warning {
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}

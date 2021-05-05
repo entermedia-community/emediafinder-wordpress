@@ -121,9 +121,12 @@ function emedia_finder_cgb_block_assets()
 		array(
 			'emdb_cdn_prefix' => get_option('emdb_cdn_prefix'),
 			'emdb_entermediakey' => get_option('emdb_entermediakey'),
-			'emdb_collectionid' => get_option('emdb_collectionid')
+			'emdb_collectionid' => get_option('emdb_collectionid'),
+			'emdb_enabled_users' => get_option('emdb_enabled_users'),
+			'emdb_adminkey' => get_option('emdb_adminkey'),
+			'emdb_current_wp_user' => wp_get_current_user(),
+			'main_server' => get_option('emdb_main_server')
 		)
 	);
-}
 
-add_action('init', 'emedia_finder_cgb_block_assets');
+}
