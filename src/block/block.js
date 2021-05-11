@@ -64,7 +64,7 @@ registerBlockType('cgb/block-emedia-finder', {
 		// vars
 		const { attributes, setAttributes } = props;
 		const cookieName = 'mediafinderkey';
-		const loggedUser = credentials.emdb_current_wp_user.data.user_email;
+		const loggedUser = credentials.emediafinderdb_current_wp_user.data.user_email;
 		const blockHeader = // Block header
 			<div class="components-placeholder__label">
 				<span class="block-editor-block-icon">
@@ -286,8 +286,8 @@ registerBlockType('cgb/block-emedia-finder', {
 		* Main Block, containg buttons that will bring up the main modals for selecting assets
 		*/
 		function EmBox() {
-			const href = `${credentials.emdb_cdn_prefix}/finder/blockfind/index.html`;
-			const hrefUpload = `${credentials.emdb_cdn_prefix}/finder/blockfind/views/modules/asset/add/start.html`;
+			const href = `${credentials.emediafinderdb_cdn_prefix}/finder/blockfind/index.html`;
+			const hrefUpload = `${credentials.emediafinderdb_cdn_prefix}/finder/blockfind/views/modules/asset/add/start.html`;
 			const linkGalleryId = `gallery${attributes.emInputId}`;
 			const linkUploadId = `upload${attributes.emInputId}`;
 			return (
@@ -303,9 +303,9 @@ registerBlockType('cgb/block-emedia-finder', {
 							<div class="components-drop-zone"></div>
 							<div class="components-form-file-upload">
 								<a href="" class="emediafinder components-button is-primary" onClick={CheckForChanges} id={linkUploadId} data-emhref={hrefUpload} data-email={loggedUser}
-									data-emkey={credentials.emdb_adminkey} data-inputidupload={attributes.emInputId} data-collectionid={credentials.emdb_collectionid}>Uploader</a>
+									data-emkey={credentials.emediafinderdb_adminkey} data-inputidupload={attributes.emInputId} data-collectionid={credentials.emediafinderdb_collectionid}>Uploader</a>
 								<a href="" class="emediafinder components-button is-tertiary" onClick={CheckForChanges} id={linkGalleryId} data-emhref={href} data-email={loggedUser}
-									data-emkey={credentials.emdb_adminkey} data-inputidupload={attributes.emInputId} data-collectionid={credentials.emdb_collectionid}>View Finder</a>
+									data-emkey={credentials.emediafinderdb_adminkey} data-inputidupload={attributes.emInputId} data-collectionid={credentials.emediafinderdb_collectionid}>View Finder</a>
 							</div>
 						</div>
 					</div>
@@ -346,7 +346,7 @@ registerBlockType('cgb/block-emedia-finder', {
 			return fetch(url, { headers });
 		}
 		function ValidateKey() {
-			const validateUrl = `${credentials.emdb_cdn_prefix}/finder/mediadb/services/settings/users/data/admin?entermediadb.key=${emKey}`;
+			const validateUrl = `${credentials.emediafinderdb_cdn_prefix}/finder/mediadb/services/settings/users/data/admin?entermediadb.key=${emKey}`;
 			return true;
 		}
 		*/
@@ -354,11 +354,11 @@ registerBlockType('cgb/block-emedia-finder', {
 		// assigning unique value to url input (in case of multiple blocks)
 		if (!props.attributes.emInputId) { props.setAttributes({ emInputId: `em${guid()}` }); }
 		// Configuration Checks
-		if (!credentials.emdb_adminkey) { return MissingSettings("Missing access key, please click below for configuring access key in wordpress configuration, or ask wordpress administrator"); }
-		if (!credentials.emdb_current_wp_user) { return MissingSettings("Email is not present on wordpress configuration"); }
+		if (!credentials.emediafinderdb_adminkey) { return MissingSettings("Missing access key, please click below for configuring access key in wordpress configuration, or ask wordpress administrator"); }
+		if (!credentials.emediafinderdb_current_wp_user) { return MissingSettings("Email is not present on wordpress configuration"); }
 
 		// checking all settings are configured properly
-		if (credentials.emdb_cdn_prefix && credentials.emdb_entermediakey && credentials.emdb_collectionid) { return EmBox(); }
+		if (credentials.emediafinderdb_cdn_prefix && credentials.emediafinderdb_entermediakey && credentials.emediafinderdb_collectionid) { return EmBox(); }
 
 		// in case a configuration is missing
 		return MissingSettings('You must configure all required settings for eMediaFinder in Wordpress settings');
@@ -366,7 +366,7 @@ registerBlockType('cgb/block-emedia-finder', {
 
 	/**
 	 * public block
-	 * @link https://emediafinder.org/
+	 * @link https://emediafinder.com/
 	 *
 	 * @param {Object} props Props.
 	 * @returns {Mixed} JSX Frontend HTML.

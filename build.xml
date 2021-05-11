@@ -7,7 +7,10 @@
     </target>
     <target name="build" depends="clean">
         <replace file="plugin.php">
-            <replacefilter token="@@Version@@" value="10.${version}" />
+            <replacefilter token="@@Version@@" value="10.1.${version}" />
+        </replace>
+        <replace file="readme.txt">
+            <replacefilter token="@@Version@@" value="10.1.${version}" />
         </replace>
         <zip destfile="${project-name}.zip" basedir="./" excludes="build.xml,${project-name}.zip">
             <exclude name=".git/**" />

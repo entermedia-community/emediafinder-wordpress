@@ -1,13 +1,10 @@
 const emHost = 'https://emediafinder.com';
 var workspaces;
-var users = [];
-var enabledUsers = [];
 
-function init() {
-    const emKey = document.getElementById('emdb_entermediakey');
+function emediafinder_init() {
+    const emKey = document.getElementById('emediafinderdb_entermediakey');
     if (emKey && emKey.value) {
-        GetWorkSpaces();
-        const workspaceSelect = document.getElementById('emcatalogs');
+        emediafinder_GetWorkSpaces();
     }
 }
 
@@ -41,14 +38,14 @@ if (!Array.prototype.find) {
     });
 }
 
-function HttpPost(url, data, async) {
+function emediafinder_HttpPost(url, data, async) {
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open("POST", url, async);
     xmlHttp.send(JSON.stringify(data));
     return xmlHttp;
 }
 
-function alertEmail(message, divid) {
+function emediafinder_alertEmail(message, divid) {
     const alertDiv = document.getElementById(divid);
     alertDiv.style.display = "block";
     alertDiv.innerHTML = message;
@@ -57,49 +54,48 @@ function alertEmail(message, divid) {
     }, 5000);
 }
 
-function sendEmail() {
-    const email = document.getElementById('emdb_email');
+function emediafinder_sendEmail() {
+    const email = document.getElementById('emediafinderdb_email');
     if (!email.value) {
-        alertEmail('Please type your email', 'alerterror');
+        emediafinder_alertEmail('Please type your email', 'alerterror');
         return;
     }
     const urlPath = '/entermediadb/mediadb/services/authentication/emailwordpress.json'
     const encodedEmail = encodeURIComponent(email.value);
     const url = encodeURI(`${emHost}${urlPath}?to=`); // dont re-encode email here
-    const resp = HttpPost(url + encodedEmail, {}, false);
+    const resp = emediafinder_HttpPost(url + encodedEmail, {}, false);
     if (resp.status === 200) {
-        alertEmail('Email sent, please check your email don\'t forget to check spam folder', 'alertmail');
+        emediafinder_alertEmail('Email sent, please check your email don\'t forget to check spam folder', 'alertmail');
     } else {
-        alertEmail('Please type a registered email', 'alerterror');
+        emediafinder_alertEmail('Please type a registered email', 'alerterror');
     }
 }
 
-function SelectWorkspace() {
+function emediafinder_SelectWorkspace() {
     const selectCat = document.getElementById('emcatalogs');
     const workspace = workspaces.workspaces.find(x => x.url === selectCat.value);
-    document.getElementById('emdb_cdn_prefix').value = workspace.url;
-    document.getElementById('emdb_collectionid').value = workspace.collectionid;
-    GetAdminKey();
+    document.getElementById('emediafinderdb_cdn_prefix').value = workspace.url;
+    document.getElementById('emediafinderdb_collectionid').value = workspace.collectionid;
+    emediafinder_GetAdminKey();
 }
 
-function NoWorkspace() {
-    const workspaceSelect = document.getElementById('catalogdropdown');
-    const li = document.createElement('li');
-    li.innerHTML = `<button class="dropdown-item" href="#" disabled>No Workspace found</button>`
-    workspaceSelect.appendChild(li);
+function emediafinder_ConnectionError(msg) {
+    const errorMessage = document.getElementById('workspacedanger');
+    errorMessage.innerHTML = msg;
+    errorMessage.style = "display: block";
 }
 
-function GetWorkSpaces() {
+function emediafinder_GetWorkSpaces() {
     const block = document.getElementById('loadblock');
     block.style.display = "block";
     const message = document.getElementById('loading-message');
     message.innerHTML = 'Loading Your Workspace, Please wait...';
 
     var urlPath = "/entermediadb/mediadb/services/authentication/workspacesonteam.json";
-    const emKey = document.getElementById('emdb_entermediakey');
+    const emKey = document.getElementById('emediafinderdb_entermediakey');
     const encodedKey = encodeURIComponent(emKey.value);
     const url = encodeURI(`${emHost}${urlPath}?noredirect=true&entermedia.key=`); // dont re-encode email here
-    const req = HttpPost(url + encodedKey, {}, true);
+    const req = emediafinder_HttpPost(url + encodedKey, {}, true);
     req.onload = function () {
         if (req.readyState === 4) {
             block.style.display = "none";
@@ -119,41 +115,38 @@ function GetWorkSpaces() {
                         workspaceSelect.add(option);
                     });
                 } else {
-                    NoWorkspace();
+                    emediafinder_ConnectionError('Did not find any workspaces, please register and create new free trial instance');
                 }
             } else {
-                NoWorkspace();
+                emediafinder_ConnectionError('Unable to Login, please refresh your key');
             }
         }
     };
 }
 
-function GetAdminKey() {
+function emediafinder_GetAdminKey() {
     var urlPath = "/finder/mediadb/services/workspaces/getadminkey.json";
-    const emKey = document.getElementById('emdb_entermediakey');
-    const hostPrefix = document.getElementById('emdb_cdn_prefix').value;
+    const emKey = document.getElementById('emediafinderdb_entermediakey');
+    const hostPrefix = document.getElementById('emediafinderdb_cdn_prefix').value;
     const encodedKey = encodeURIComponent(emKey.value);
-    const collectionid = encodeURIComponent(document.getElementById('emdb_collectionid').value);
+    const collectionid = encodeURIComponent(document.getElementById('emediafinderdb_collectionid').value);
     const url = encodeURI(`${hostPrefix}${urlPath}`); // dont re-encode email here
 
-    // TODO: get from api
-    const req = HttpPost(`${url}?collectionid=${collectionid}&entermediacloudkey=${encodedKey}`, {}, true);
+    const req = emediafinder_HttpPost(`${url}?collectionid=${collectionid}&entermediacloudkey=${encodedKey}`, {}, true);
     req.onload = function () {
         if (req.readyState === 4) {
             if (req.status === 200) {
                 var result = JSON.parse(req.response);
-                console.log('gettingkey', result);
                 if (result.response.status === 'ok') {
-                    document.getElementById('emdb_adminkey').value = result.response.entermediakey;
+                    document.getElementById('emediafinderdb_adminkey').value = result.response.entermediakey;
                 }
             } else {
                 document.getElementById('adminkey_warning').innerHTML = 'Could not get key';
             }
         }
     }
-
 }
 
 setTimeout(() => { // give some time to wp to load vars
-    init();
+    emediafinder_init();
 }, 1000);

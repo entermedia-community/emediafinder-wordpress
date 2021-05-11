@@ -3,7 +3,7 @@ Contributors: Entermedia Team
 Tags: entermediadb, entermedia, emediafinder, gallery
 Requires at least: 5.0
 Tested up to: 5.7
-Stable tag: 10.0
+Stable tag: @@Version@@
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -68,5 +68,8 @@ Link to [WordPress](http://wordpress.org/emediafinder "emediafinder").
 1. Use plugin as a block
 
 == Changelog ==
-= 10.16 =
+= 10.1.23 =
+* Fixes for wordpress release
+
+= 10.1.16 =
 * Initial release

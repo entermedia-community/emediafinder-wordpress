@@ -66,7 +66,7 @@ function emedia_finder_cgb_block_assets()
 		]
 	);
 
-	$emfinderHost = get_option('emdb_cdn_prefix');
+	$emfinderHost = get_option('emediafinderdb_cdn_prefix');
 	if ($emfinderHost != '') {
 		wp_register_script('blockfind', $emfinderHost . '/finder/blockfind/components/javascript/blockfind.js', '', '', true);
 		wp_enqueue_script('blockfind');
@@ -119,13 +119,13 @@ function emedia_finder_cgb_block_assets()
 		'emedia_finder-cgb-block-js',
 		'credentials',
 		array(
-			'emdb_cdn_prefix' => get_option('emdb_cdn_prefix'),
-			'emdb_entermediakey' => get_option('emdb_entermediakey'),
-			'emdb_collectionid' => get_option('emdb_collectionid'),
-			'emdb_enabled_users' => get_option('emdb_enabled_users'),
-			'emdb_adminkey' => get_option('emdb_adminkey'),
-			'emdb_current_wp_user' => wp_get_current_user(),
-			'main_server' => get_option('emdb_main_server')
+			'emediafinderdb_cdn_prefix' => get_option('emediafinderdb_cdn_prefix'),
+			'emediafinderdb_entermediakey' => get_option('emediafinderdb_entermediakey'),
+			'emediafinderdb_collectionid' => get_option('emediafinderdb_collectionid'),
+			'emediafinderdb_enabled_users' => get_option('emediafinderdb_enabled_users'),
+			'emediafinderdb_adminkey' => get_option('emediafinderdb_adminkey'),
+			'emediafinderdb_current_wp_user' => wp_get_current_user(),
+			'emediafinderdb_main_server' => get_option('emediafinderdb_main_server')
 		)
 	);
 }
