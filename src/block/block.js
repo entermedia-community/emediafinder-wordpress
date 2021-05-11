@@ -296,7 +296,7 @@ registerBlockType('cgb/block-emedia-finder', {
 					{ShowSelectedImage()}
 					<div class="components-placeholder block-editor-media-placeholder is-large">
 						{blockHeader}
-						<input id={inputId} type="text" class="form-control" value={props.attributes.url} onChange={SaveUrl} />
+						<input id={inputId} type="text" class="form-control" value={props.attributes.url} onChange={SaveUrl} hidden />
 
 						<div class="components-placeholder__instructions">Search an image or video file, or pick one from your media library.</div>
 						<div class="components-placeholder__fieldset">
