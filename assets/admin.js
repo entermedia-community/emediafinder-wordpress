@@ -1,11 +1,20 @@
-const emHost = 'https://emediafinder.com';
+var emHost = '';
 var workspaces;
 
 function emediafinder_init() {
     const emKey = document.getElementById('emediafinderdb_entermediakey');
-    if (emKey && emKey.value) {
+    const emMainServer = document.getElementById('emediafinderdb_main_server');
+    if (!emMainServer.value) {
+        emHost = 'https://emediafinder.com';
+        emMainServer.value = emHost;
+    } else {
+        emHost = emMainServer.value
+    }
+
+    if (emKey && emKey.value && emHost) {
         emediafinder_GetWorkSpaces();
     }
+    console.log(emHost);
 }
 
 if (!Array.prototype.find) {
