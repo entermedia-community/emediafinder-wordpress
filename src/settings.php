@@ -42,7 +42,7 @@ if (!function_exists('emediafinderdb_load_custom_wp_admin_style')) {
     function emediafinderdb_load_custom_wp_admin_style()
     {
         $plugin_path = plugin_dir_url(__FILE__);
-        wp_register_style('custom_wp_admin_css_bootstrap', $plugin_path . 'assets/bootstrap.min.css', false, '5.0.0-beta3');
+        wp_register_style('custom_wp_admin_css_bootstrap', $plugin_path . 'assets/bootstrap.min.css', false, '5.0.1');
         wp_enqueue_style('custom_wp_admin_css_bootstrap');
         wp_register_style('custom_wp_admin_css', $plugin_path . 'assets/admin.css', false, '1.0.0');
         wp_enqueue_style('custom_wp_admin_css');
