@@ -4,15 +4,16 @@ var workspaces;
 function emediafinder_init() {
     const emKey = document.getElementById('emediafinderdb_entermediakey');
     const emMainServer = document.getElementById('emediafinderdb_main_server');
-    if (!emMainServer.value) {
-        emHost = 'https://emediafinder.com';
-        emMainServer.value = emHost;
-    } else {
-        emHost = emMainServer.value
-    }
-
-    if (emKey && emKey.value && emHost) {
-        emediafinder_GetWorkSpaces();
+    if (emMainServer) {
+        if (!emMainServer.value) {
+            emHost = 'https://emediafinder.com';
+            emMainServer.value = emHost;
+        } else {
+            emHost = emMainServer.value
+        }
+        if (emKey && emKey.value && emHost) {
+            emediafinder_GetWorkSpaces();
+        }
     }
     console.log(emHost);
 }
