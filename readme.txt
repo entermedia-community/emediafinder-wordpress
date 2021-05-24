@@ -1,4 +1,4 @@
-=== Test Plugin ===
+=== eMediaFinder ===
 Contributors: Entermedia Team
 Tags: entermediadb, entermedia, emediafinder, gallery
 Requires at least: 5.0
@@ -63,9 +63,18 @@ eMediaFinder Gallery block plugin
 Link to [WordPress](http://wordpress.org/emediafinder "emediafinder").
 
 == Installation ==
-1. Upload "test-plugin.php" to the "/wp-content/plugins/" directory.
+1. Upload "emediafinder.zip" to the "/wp-content/plugins/" directory.
 1. Activate the plugin through the "Plugins" menu in WordPress.
 1. Use plugin as a block
+
+== Screenshots ==
+1. Gallery
+2. Smart Search
+3. Metadata and More
+4. Gallery and Albums
+5. Block Options
+6. Upload Screen
+7. Multirow Gallery Options
 
 == Changelog ==
 = 10.1.23 =
