@@ -70,7 +70,7 @@ function emedia_finder_cgb_block_assets()
 	if ($emfinderHost != '') {
 		wp_register_script('blockfind', $emfinderHost . '/finder/blockfind/components/javascript/blockfind.js', '', '', true);
 		wp_enqueue_script('blockfind');
-		wp_register_script('jquery', $emfinderHost . '/finder/blockfind/components/javascript/jquery-3.3.1.min.js', '', '', true);
+		wp_register_script('jquery', $emfinderHost . '/finder/blockfind/components/javascript/jquery-1.11.0.min.js', '', '', true);
 		wp_enqueue_script('jquery');
 		wp_register_script('popper', $emfinderHost . '/finder/blockfind/components/javascript/bootstrap/4.5.3/js/popper.min.js', '', '', true);
 		wp_enqueue_script('popper');
