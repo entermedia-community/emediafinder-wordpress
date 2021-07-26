@@ -2,7 +2,7 @@
 Contributors: Entermedia Team
 Tags: entermediadb, entermedia, emediafinder, gallery
 Requires at least: 5.0
-Tested up to: 5.7.2
+Tested up to: 5.8
 Stable tag: @@Version@@
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -77,6 +77,10 @@ Link to [WordPress](http://wordpress.org/emediafinder "emediafinder").
 7. Multirow Gallery Options
 
 == Changelog ==
+= 10.1.42 =
+* Update for wordpress 5.8
+* Fixes to multiple bugs
+
 = 10.1.23 =
 * Fixes for wordpress release
 
